@@ -59,7 +59,11 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the main HTML page"""
-    return templates.TemplateResponse("indexa.html", {"request": request})
+    return templates.TemplateResponse(
+    request=request,
+    name="indexa.html",
+    context={}
+)
 
 @app.post("/refresh_data")
 async def refresh_data_endpoint():
