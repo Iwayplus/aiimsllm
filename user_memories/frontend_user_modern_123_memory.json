@@ -1,0 +1,163 @@
+{
+  "short_term_history": [
+    {
+      "user": "Good morning",
+      "assistant": "Good morning! 😊 Welcome to AIIMS Jammu How can I help you today?",
+      "timestamp": 1755665126.5343666,
+      "turn_index": 0,
+      "entities": {
+        "interaction_type": [
+          "greeting"
+        ],
+        "user_mood": [],
+        "conversation_flow": [
+          "new"
+        ],
+        "response_type": [
+          "simple"
+        ]
+      },
+      "sentiment": "positive",
+      "importance": 0.6,
+      "topics": [
+        "small_talk",
+        "greeting"
+      ],
+      "session_id": "698392fa"
+    },
+    {
+      "user": "I need contact details of any cardiology doctor",
+      "assistant": "Dr. Jai Singh, a cardiology doctor, can be reached at Room 418 on Floor 4 of the Academic Building at AIIMS Jammu. Unfortunately, the provided context does not contain his direct contact details. However, you can contact the hospital's helpdesk at Phone: 098-26548765 or Email: helpdesk@aimmsjammu.in for assistance.",
+      "timestamp": 1755665146.8069534,
+      "turn_index": 1,
+      "entities": {
+        "hospitals": [],
+        "buildings": [],
+        "floors": [],
+        "rooms": [],
+        "departments": [
+          "cardiology"
+        ],
+        "doctors": [],
+        "services": [],
+        "lifts": [],
+        "stairs": [],
+        "washrooms": [],
+        "general_terms": [],
+        "misc": []
+      },
+      "sentiment": "neutral",
+      "importance": 0.5,
+      "topics": [],
+      "session_id": "698392fa"
+    },
+    {
+      "user": "Okay then tell me contact details of jai Singh",
+      "assistant": "I apologize, but I encountered an issue while processing your request. The context might have been too large.",
+      "timestamp": 1755665176.5549507,
+      "turn_index": 2,
+      "entities": {
+        "hospitals": [],
+        "buildings": [],
+        "floors": [],
+        "rooms": [],
+        "departments": [
+          "cardiology"
+        ],
+        "doctors": [],
+        "services": [],
+        "lifts": [],
+        "stairs": [],
+        "washrooms": [],
+        "general_terms": [],
+        "misc": []
+      },
+      "sentiment": "neutral",
+      "importance": 0.5,
+      "topics": [],
+      "session_id": "698392fa"
+    },
+    {
+      "user": "Jai singh email",
+      "assistant": "I apologize, but I encountered an issue while processing your request. The context might have been too large.",
+      "timestamp": 1755665194.0415676,
+      "turn_index": 3,
+      "entities": {
+        "hospitals": [],
+        "buildings": [],
+        "floors": [],
+        "rooms": [],
+        "departments": [
+          "cardiology"
+        ],
+        "doctors": [],
+        "services": [],
+        "lifts": [],
+        "stairs": [],
+        "washrooms": [],
+        "general_terms": [],
+        "misc": []
+      },
+      "sentiment": "neutral",
+      "importance": 0.5,
+      "topics": [],
+      "session_id": "698392fa"
+    },
+    {
+      "user": "And cardiology doctor",
+      "assistant": "Dr. Jai Singh, a specialist in Cardiology, is available for consultation in Room 418 on Floor 4 of the Academic Building at AIIMS Jammu.",
+      "timestamp": 1755665214.3043916,
+      "turn_index": 4,
+      "entities": {
+        "hospitals": [],
+        "buildings": [],
+        "floors": [],
+        "rooms": [],
+        "departments": [
+          "cardiology"
+        ],
+        "doctors": [],
+        "services": [],
+        "lifts": [],
+        "stairs": [],
+        "washrooms": [],
+        "general_terms": [],
+        "misc": []
+      },
+      "sentiment": "neutral",
+      "importance": 0.5,
+      "topics": [],
+      "session_id": "698392fa"
+    },
+    {
+      "user": "Okay jai singh email address",
+      "assistant": "Dr. Jai Singh's email address is jai.singh@aiimsjammu.edu.in.",
+      "timestamp": 1755665229.1921673,
+      "turn_index": 5,
+      "entities": {
+        "hospitals": [],
+        "buildings": [],
+        "floors": [],
+        "rooms": [],
+        "departments": [
+          "cardiology"
+        ],
+        "doctors": [],
+        "services": [],
+        "lifts": [],
+        "stairs": [],
+        "washrooms": [],
+        "general_terms": [],
+        "misc": []
+      },
+      "sentiment": "neutral",
+      "importance": 0.5,
+      "topics": [],
+      "session_id": "698392fa"
+    }
+  ],
+  "long_term_memory": [],
+  "entities": {
+    "concept:greeting": {
+      "value": "greeting",
+      "entity_type": 

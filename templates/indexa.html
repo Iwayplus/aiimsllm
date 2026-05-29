@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIIMS Jammu Assistant</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize/modern-normalize.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #007bff;
+            --brand-secondary: #0056b3;
+            --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --container-bg: #ffffff;
+            --user-msg-bg: #e6f3ff;
+            --bot-msg-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--background-gradient);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 750px;
+            height: 95vh;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brand-primary);
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 16px;
+            margin: 0 -16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--brand-primary) transparent;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: var(--brand-primary);
+            border-radius: 3px;
+        }
+
+        #conversation {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .user-query,
+        .bot-response {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        .user-query {
+            background-color: var(--brand-primary);
+            align-self: flex-end;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-response {
+            background-color: var(--bot-msg-bg);
+            align-self: flex-start;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 5px;
+        }
+
+        .bot-response strong {
+            color: var(--brand-primary);
+        }
+
+        .bot-response a {
+            color: var(--brand-secondary);
+            text-decoration: underline;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #888;
+            margin-top: 6px;
+        }
+
+        .user-query+.timestamp {
+            align-self: flex-end;
+            margin-right: 8px;
+        }
+
+        .bot-response+.timestamp {
+            align-self: flex-start;
+            margin-left: 8px;
+        }
+
+        .input-area {
+            border-top: 1px solid var(--border-color);
+            padding-top: 0px;
+            margin-top: auto;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-container input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-container input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+        /* WhatsApp-style button */
+        .input-container button {
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-container button:hover:not(:disabled) {
+            background-color: #075E54;
+            transform: scale(1.05);
+        }
+
+        .input-container button:disabled {
+            background-color: #b0e0d7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-indicators {
+            text-align: center;
+            padding: 0px 0;
+            /* min-height: 40px; */
+        }
+
+        .loading-indicator .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 123, 255, 0.2);
+            border-top-color: var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .related-queries {
+            margin-top: 15px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .related-queries h3 {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .related-queries ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .related-queries ul li {
+            background-color: var(--bot-msg-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--brand-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .related-queries ul li:hover {
+            background-color: #e2e6ea;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-footer {
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 12px;
+            padding-top: 16px;
+        }
+
+        /* Alpine.js utility classes */
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" x-data="chatbot()" x-init="init()">
+        <h1>AIIMS Jammu Assistant</h1>
+
+        <div class="chat-box" x-ref="chatBox">
+            <div id="conversation">
+                <template x-for="(message, index) in messages" :key="index">
+                    <div class="message-wrapper">
+                        <div :class="message.isUser ? 'user-query' : 'bot-response'" x-html="message.html"></div>
+                        <div class="timestamp" x-text="message.timestamp"></div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="status-indicators">
+                <div x-show="isLoading" class="loading-indicator">
+                    <div class="spinner"></div>
+                </div>
+                <div x-show="errorMessage" class="error-message" x-text="errorMessage"></div>
+            </div>
+
+            <div x-show="relatedQueries.length > 0" class="related-queries" x-cloak>
+                <h3>Suggested Follow-ups:</h3>
+                <ul>
+                    <template x-for="query in relatedQueries">
+                        <li @click="submitRelatedQuery(query)" x-text="query"></li>
+                    </template>
+                </ul>
+            </div>
+
+            <p style="font-size: 13px; text-align: center; color: #555; margin-top:10px; margin-bottom: 5px;">
+                🌍 You can ask in any language.
+            </p>
+
+            <form @submit.prevent="handleQuery" class="input-container">
+                <input type="text" x-model="userQuery" placeholder="Ask something about AIIMS Jammu..."
+                    :disabled="isLoading" @input="checkInput">
+                <button type="submit" :disabled="isLoading || !userQuery.trim()" x-show="showSubmitButton">Ask</button>
+            </form>
+
+            <div class="chat-footer">
+                Powered by iWayPlus
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function chatbot() {
+            return {
+                // --- STATE ---
+                userQuery: '',
+                messages: [], // { text: '...', html: '...', isUser: true/false, timestamp: '...' }
+                relatedQueries: [],
+                isLoading: false,
+                errorMessage: '',
+                showSubmitButton: false, // Add this new state variable
+
+                // --- LIFECYCLE HOOKS ---
+                init() {
+                    // Welcome message
+                    // this.addBotMessage("Hello! How can I help you with AIIMS Jammu today?");
+
+                    // Watch for new messages and scroll to bottom
+                    this.$watch('messages', () => {
+                        this.$nextTick(() => this.scrollToBottom());
+                    });
+                },
+
+                // --- METHODS ---
+                async handleQuery() {
+                    const query = this.userQuery.trim();
+                    if (!query || this.isLoading) return;
+
+                    // Reset UI states
+                    this.errorMessage = '';
+                    this.relatedQueries = [];
+
+                    // Add user message to UI
+                    this.addUserMessage(query);
+                    this.userQuery = ''; // Clear input field
+                    this.showSubmitButton = false; // Hide button after submission
+
+                    this.isLoading = true;
+
+                    try {
+                        const response = await fetch("/chat", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-User-ID": "frontend_user_modern_123"
+                            },
+                            body: JSON.stringify({ message: query })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({ detail: "Unknown server error." }));
+                            throw new Error(errorData.detail || `Server error: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+
+                        this.addBotMessage(data.answer || "Sorry, I don't have an answer for that.");
+
+                        if (data.related_queries && Array.isArray(data.related_queries)) {
+                            this.relatedQueries = data.related_queries;
+                        }
+
+                    } catch (error) {
+                        console.error('Chatbot Error:', error);
+                        this.errorMessage = `Error: ${error.message || "Could not connect to the assistant."}`;
+                        this.addBotMessage(`<span style="color:red;">Sorry, I encountered an error. Please try again.</span>`);
+                    } finally {
+                        this.isLoading = false;
+                        // Ensure input is focused after operation
+                        this.$nextTick(() => this.$el.querySelector('input').focus());
+                    }
+                },
+
+                submitRelatedQuery(query) {
+                    this.userQuery = query;
+                    this.handleQuery();
+                },
+
+                // --- NEW METHOD ---
+                checkInput() {
+                    this.showSubmitButton = this.userQuery.trim().length > 0;
+                },
+
+                // --- UTILITY FUNCTIONS ---
+                addUserMessage(text) {
+                    this.messages.push({
+                        text: text,
+                        html: this.escapeHTML(text), // Basic escaping for user input
+                        isUser: true,
+                        timestamp: this.getTimestamp()
+                    });
+                },
+
+                addBotMessage(text) {
+                    const formattedHtml = this.formatBotResponse(text);
+
+                    const message = {
+                        text: "", // will fill gradually
+                        html: `<strong>Assistant:</strong> `,
+                        isUser: false,
+                        timestamp: this.getTimestamp()
+                    };
+
+                    this.messages.push(message);
+
+                    let index = 0;
+                    const typingSpeed = 30; // ms per character
+
+                    const interval = setInterval(() => {
+                        if (index < formattedHtml.length) {
+                            // gradually append characters
+                            this.messages[this.messages.length-1].html += formattedHtml[index];
+                            index++;
+
+                            // force UI update if using Vue/React/etc.
+                            // this.$forceUpdate?.();
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, typingSpeed);
+                },
+
+                getTimestamp() {
+                    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                },
+
+                scrollToBottom() {
+                    this.$refs.chatBox.scrollTop = this.$refs.chatBox.scrollHeight;
+                },
+
+                formatBotResponse(text) {
+                    let html = this.escapeHTML(text);
+
+                    // Markdown: Bold (**text**) and Italic (*text*)
+                    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                    // Convert URLs to clickable links
+                    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])|(\bwww\.[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                    html = html.replace(urlRegex, (url) => {
+                        let fullUrl = url.startsWith('http') ? url : `http://${url}`;
+                        return `<a href="${fullUrl}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+                    });
+
+                    // Convert email addresses to clickable mailto links
+                    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+                    html = html.replace(emailRegex, (email) => {
+                        return `<a href="mailto:${email}">${email}</a>`;
+                    });
+
+                    // Convert newlines to <br> tags
+                    html = html.replace(/\n/g, '<br>');
+
+                    // Basic list support (* item or - item)
+                    if (html.includes('<br>* ') || html.includes('<br>- ')) {
+                        html = html.replace(/<br>[\*\-]\s/g, '</li><li>');
+                        html = `<ul><li>${html.substring(html.indexOf('</li><li>') + 9)}</li></ul>`;
+                        html = html.replace(`<ul><li></li>`, `<ul>`); // Clean up potential empty first item
+                    }
+
+                    return html;
+                },
+
+                escapeHTML(str) {
+                    const p = document.createElement("p");
+                    p.appendChild(document.createTextNode(str));
+                    return p.innerHTML;
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
