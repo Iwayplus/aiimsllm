@@ -120,4 +120,4 @@ async def health_check():
     return {"status": "healthy", "message": "API is running"}
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=5001, reload=True, log_level="info")
+    uvicorn.run("app:app", host="127.0.0.1", port=5001, reload=False, log_level="info")
